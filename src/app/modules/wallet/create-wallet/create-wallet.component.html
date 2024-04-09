@@ -1,0 +1,119 @@
+<form [formGroup]="formGroup" autocomplete="off">
+  <app-form-control-wrapper [control]="formGroup.get('name')" [errors]="errors['name']">
+    <label for="name" control-label>{{'wallet_name' | translate}} *</label>
+    <input id="name" type="text" formControlName="name" name="name" control-wrapper>
+  </app-form-control-wrapper>
+
+  <app-form-control-wrapper [control]="formGroup.get('maxOwners')" [errors]="errors['maxOwners']">
+    <label for="maxOwners" control-label>{{'number_of_owners' | translate}} *</label>
+    <select id="maxOwners" formControlName="maxOwners" name="maxOwners" control-wrapper>
+      <option *ngFor="let el of ownersCountList" [value]="el.value">{{el.title | translate}}</option>
+    </select>
+  </app-form-control-wrapper>
+
+  <app-form-control-wrapper [control]="formGroup.get('signature')" [errors]="errors['signature']">
+    <label for="signature" control-label>{{'signature_number_required' | translate}} *</label>
+    <select id="signature" formControlName="signature" name="signature" control-wrapper>
+      <option *ngFor="let el of signatureCountList" [value]="el.value">{{el.title | translate}}</option>
+    </select>
+  </app-form-control-wrapper>
+
+  <!-- initiatorAddress -->
+  <app-form-control-wrapper [control]="formGroup.get('initiatorAddress')" [errors]="errors['initiatorAddress']">
+    <div control-label>
+      <label for="initiatorAddress">{{'select_wallet' | translate}}</label>
+      <div *ngIf="!!initiatorWallet && !initiatorWallet?.isBalanceHidden">
+        <span>{{'balance' | translate}} </span>
+        <span class="text-cornflower">{{initiatorWallet.eth | number:FORMAT_ETH_CURRENCY}} ETH </span>
+        <span>({{initiatorWallet.ye | currency: exRate.title}})</span>
+      </div>
+    </div>
+    <div control-wrapper>
+      <select id="initiatorAddress" formControlName="initiatorAddress" name="initiatorAddress">
+        <option *ngFor="let el of walletsSelectList" [value]="el.value">{{el.title | translate}}</option>
+      </select>
+    </div>
+  </app-form-control-wrapper>
+
+  <!-- add owners -->
+  <div class="form-group">
+    <div formArrayName="otherOwners">
+      <app-form-control-wrapper *ngFor="let otherOwner of otherOwners.controls || []; let i = index"
+        [control]="otherOwner" [errors]="errors['otherOwners']">
+        <label for="otherOwner{{i}}" control-label>{{'owner_address' | translate}}</label>
+        <div control-wrapper>
+          <button (click)="removeOwner(i)">
+            remove
+          </button>
+          <input type="text" formControlName="{{i}}" class="form-control" id="otherOwner{{i}}" name="otherOwner{{i}}">
+        </div>
+      </app-form-control-wrapper>
+    </div>
+    <div *ngIf="errorOtherOwners">
+      <div>
+        <div>{{errorOtherOwners | translate}}</div>
+      </div>
+    </div>
+    <button (click)="addOwner()">+ {{'add_owner' | translate}}</button>
+  </div>
+
+  <!-- Changing Owners -->
+  <div>
+    <div>
+      <input type="checkbox" id="isOwnersChanges" formControlName="isOwnersChanges">
+      <label for="isOwnersChanges">{{'is_changing_owners' | translate}}</label>
+    </div>
+  </div>
+
+  <!-- Password -->
+  <app-form-control-wrapper [control]="formGroup.get('jsonPasswordSw')" [errors]="errors['jsonPasswordSw']">
+    <label for="jsonPasswordSw" control-label>{{'password' | translate}} *</label>
+    <div control-wrapper>
+      <input #jsonPasswordSw type="password" formControlName="jsonPasswordSw" id="jsonPasswordSw"
+        name="jsonPasswordSw">
+      <button
+        (click)="jsonPasswordSw.type==='text' ? jsonPasswordSw.type='password' : jsonPasswordSw.type='text'">
+        {{'show' | translate}}
+      </button>
+    </div>
+  </app-form-control-wrapper>
+
+  <!-- Save password for session -->
+  <div>
+    <div>
+      <input type="checkbox" id="isSavePasswordSw" formControlName="isSavePasswordSw">
+      <label for="isSavePasswordSw">{{'save_password' | translate}}</label>
+    </div>
+  </div>
+
+  <!-- Expert mode -->
+  <div>
+    <div >
+      <input type="checkbox" id="isExpertModeSw" formControlName="isExpertModeSw">
+      <label for="isExpertModeSw">{{'expert_mode' | translate}}</label>
+    </div>
+    <span>{{'expert_mode_description' | translate}}</span>
+  </div>
+  <div>
+    <!-- <app-expert-mode-section (slChange)="onChangeExpertMode($event)"
+      [isExpertMode]="isExpertModeSw"></app-expert-mode-section> -->
+  </div>
+
+  <!-- All error -->
+  <div *ngIf="formGroup.errors?.['err']">
+    <div class="form-alerts">
+      <div class="alert alert-danger">{{formGroup.errors?.['err'] | translate}}</div>
+    </div>
+  </div>
+  <div class="form-group buttons-block">
+    <div>
+      <span>{{'price' | translate}}: </span>
+      <span class="text-cornflower">{{costTransaction.eth | number:FORMAT_ETH_CURRENCY}} ETH </span>
+      <span>({{costTransaction.ye | currency: exRate.title}})</span>
+    </div>
+    <div class="fl-button">
+      <button type="button" [disabled]="!isDisabledForm">{{'create' | translate }}</button>
+    </div>
+  </div>
+
+</form>

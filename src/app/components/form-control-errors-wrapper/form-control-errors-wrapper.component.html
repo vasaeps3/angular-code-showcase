@@ -1,0 +1,7 @@
+<div *ngIf="!control?.valid && control?.touched; else not_error">
+  <!-- <div class="text-error" *ngFor="let preparedMessage of preparedMessages">{{preparedMessage | async}}</div> -->
+  <div class="text-error">{{preparedMessages[0] | async }}</div>
+</div>
+<ng-template #not_error>
+  <div class="text-error">&nbsp;</div>
+</ng-template>

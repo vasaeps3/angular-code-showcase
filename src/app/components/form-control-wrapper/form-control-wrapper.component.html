@@ -1,0 +1,5 @@
+<div class="form-group" [class.invalid]="control?.invalid && control?.touched">
+  <ng-content select="[control-label]"></ng-content>
+  <ng-content select="[control-wrapper]"></ng-content>
+  <app-form-control-errors-wrapper [control]="control" [errors]="errors"></app-form-control-errors-wrapper>
+</div>
