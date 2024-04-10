@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -64,7 +64,7 @@ const createSimpleNumberedSelectList = (
   templateUrl: './create-wallet.component.html',
   styleUrl: './create-wallet.component.scss',
 })
-export class CreateWalletComponent implements OnInit {
+export class CreateWalletComponent implements OnInit, OnDestroy {
   public isExpertModeSw = false;
   public FORMAT_ETH_CURRENCY = FORMAT_ETH_CURRENCY;
   public exRate: IExRate = this.balanceService.exRate;
@@ -104,6 +104,10 @@ export class CreateWalletComponent implements OnInit {
     private wsService: WalletsStoreService,
     private balanceService: BalanceService
   ) {}
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
 
   ngOnInit() {
     this.errors = this.createErrors();
